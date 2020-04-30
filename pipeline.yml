@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: test-pipeline
+spec:
+  resources:
+  - type: git
+    name: git-repo
+  params:
+  - type: string
+    name: target-namespace
+    description: namespace to deploy to
+  tasks:
+  - name: apply
+    taskRef:
+      name: openshift-client
+      kind: ClusterTask
+    resources:
+      inputs:
+      - name: source
+        resource: git-repo
+    params:
+    - name: ARGS
+      value: 
+      - apply
+      - -f
+      -  /workspace/source/.k8s/resources
+      - -n
+      - "$(params.target-namespace)"

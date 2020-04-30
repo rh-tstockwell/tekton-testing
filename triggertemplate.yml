@@ -1,0 +1,41 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: test-pipeline-trigger
+spec:
+  params:
+  - name: git-repo-name
+    description: The name of the deployment to be created / patched
+  - name: git-repo-url
+    description: The git repository url
+  - name: git-revision
+    description: The git revision
+    default: migrating-apps-v3/2.x
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: $(params.git-repo-name)-git-repo-$(uid)
+    spec:
+      type: git
+      params:
+      - name: revision
+        value: $(params.git-revision)
+      - name: url
+        value: $(params.git-repo-url)
+
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: $(params.git-repo-name)-test-pipeline-run-$(uid)
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: test-pipeline
+      resources:
+      - name: git-repo
+        resourceRef:
+          name: $(params.git-repo-name)-git-repo-$(uid)
+      params:
+      - name: target-namespace
+        value: bookinfo

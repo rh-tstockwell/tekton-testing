@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: bookinfo-mongodb
+spec:
+  type: git
+  params:
+    - name: url
+      value: https://github.com/rh-tstockwell/bookinfo-mongodb.git
+    - name: revision
+      value: migrating-apps-v3/2.x
