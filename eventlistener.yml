@@ -5,7 +5,11 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-  - bindings:
+  - name: test-trigger
+    interceptors:
+    - cel:
+        filter: "body.ref == 'refs/head/master'"
+    bindings:
     - name: github-push
       kind: ClusterTriggerBinding
     template:

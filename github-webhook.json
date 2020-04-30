@@ -1,4 +1,5 @@
 {
+    "ref": "refs/head/master",
     "head_commit": {
         "id": "9ba1ef0e2418f1c6041fb22ca469b825cacf280e",
         "message": "Add mongodb label to configmap"
